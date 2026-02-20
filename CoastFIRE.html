@@ -96,8 +96,8 @@ function calculateCoastFIRE() {
     // Display results
     document.getElementById('result').innerHTML = `
         <h3>Results</h3>
-        <p>Amount needed today: $${amountNeededToday.toFixed(2)}</p>
-        <p>Amount expected to be saved at retirement: $${futureValueAtRetirement.toFixed(2)}</p>
+        <p>Amount needed today: $${amountNeededToday.toFixed(2).toLocaleString()}</p>
+        <p>Amount expected to be saved at retirement: $${futureValueAtRetirement.toFixed(2).toLocaleString()}</p>
     `;
 }
 </script>
