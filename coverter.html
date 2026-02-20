@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .container:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .conversion-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #e9ecef;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.3);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .unit-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .unit-button {
+            padding: 10px;
+            border: none;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .unit-button:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .unit-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+
+        #swapButton {
+            align-self: center;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        #swapButton .icon {
+            transition: transform 0.3s ease;
+            /* Reverted to inline-flex to allow alignment within the flex container of the button */
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+            width: 100%; /* Ensure icon fills the space for rotation */
+            height: 100%; /* Ensure icon fills the space for rotation */
+            line-height: 1; 
+        }
+
+        #swapButton:hover .icon {
+            transform: rotate(180deg);
+        }
+
+        #swapButton:active {
+            transform: scale(0.95);
+        }
+
+        .conversion-info {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .conversion-info span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Unit Converter</h1>
+
+        <div class="conversion-section">
+            <div class="input-group">
+                <label for="inputValue">From</label>
+                <input type="text" id="inputValue" placeholder="Enter value" />
+                <div id="inputUnitButtons" class="unit-buttons"></div>
+            </div>
+
+            <button id="swapButton" aria-label="Swap Units">
+                <span class="icon">⇄</span>
+            </button>
+
+            <div class="input-group">
+                <label for="outputValue">To</label>
+                <input type="text" id="outputValue" placeholder="Converted value" readonly />
+                <div id="outputUnitButtons" class="unit-buttons"></div>
+            </div>
+        </div>
+
+        <div class="conversion-info">
+            Convert <span id="fromUnitText">Millimeters</span> to <span id="toUnitText">Inches</span>
+        </div>
+    </div>
+
+    <script>
+        const DISTANCE_UNITS = {
+            mm: { name: "Millimeters", toCm: (value) => value / 10, fromCm: (value) => value * 10 },
+            cm: { name: "Centimeters", toCm: (value) => value, fromCm: (value) => value },
+            inches: { name: "Inches", toCm: (value) => value * 2.54, fromCm: (value) => value / 2.54 },
+            feet: { name: "Feet", toCm: (value) => value * 30.48, fromCm: (value) => value / 30.48 }
+        };
+
+        class UnitConverter {
+            constructor() {
+                this.elements = {
+                    inputValue: document.getElementById("inputValue"),
+                    outputValue: document.getElementById("outputValue"),
+                    inputUnitButtons: document.getElementById("inputUnitButtons"),
+                    outputUnitButtons: document.getElementById("outputUnitButtons"),
+                    swapButton: document.getElementById("swapButton"),
+                    fromUnitText: document.getElementById("fromUnitText"),
+                    toUnitText: document.getElementById("toUnitText"),
+                };
+
+                this.currentInputUnit = "mm";
+                this.currentOutputUnit = "inches";
+
+                this.init();
+            }
+
+            init() {
+                this.renderUnitButtons();
+                this.addEventListeners();
+                this.updateUI();
+            }
+
+            renderUnitButtons() {
+                const unitsHtml = Object.keys(DISTANCE_UNITS)
+                    .map(unitKey => `<button type="button" class="unit-button" data-unit="${unitKey}">${DISTANCE_UNITS[unitKey].name}</button>`)
+                    .join("");
+
+                this.elements.inputUnitButtons.innerHTML = unitsHtml;
+                this.elements.outputUnitButtons.innerHTML = unitsHtml;
+            }
+
+            addEventListeners() {
+                this.elements.inputValue.addEventListener("input", () => this.convert());
+                this.elements.inputValue.addEventListener("blur", () => this.handleBlur());
+                this.elements.swapButton.addEventListener("click", () => this.swapUnits());
+
+                this.elements.inputUnitButtons.addEventListener("click", (e) => this.handleUnitChange(e, "input"));
+                this.elements.outputUnitButtons.addEventListener("click", (e) => this.handleUnitChange(e, "output"));
+            }
+
+            handleUnitChange(event, type) {
+                const targetButton = event.target.closest(".unit-button");
+                if (!targetButton) return;
+
+                const newUnit = targetButton.dataset.unit;
+                if (type === "input") {
+                    this.currentInputUnit = newUnit;
+                    this.updateActiveButton(this.elements.inputUnitButtons, newUnit);
+                } else {
+                    this.currentOutputUnit = newUnit;
+                    this.updateActiveButton(this.elements.outputUnitButtons, newUnit);
+                }
+                this.updateUI();
+            }
+
+            updateActiveButton(parentElement, activeUnit) {
+                parentElement.querySelectorAll(".unit-button").forEach(button => {
+                    button.classList.toggle("active", button.dataset.unit === activeUnit);
+                });
+            }
+
+            convert() {
+                const inputValue = this.safeEval(this.elements.inputValue.value);
+
+                if (isNaN(inputValue)) {
+                    this.elements.outputValue.value = "";
+                    return;
+                }
+
+                const fromUnit = DISTANCE_UNITS[this.currentInputUnit];
+                const toUnit = DISTANCE_UNITS[this.currentOutputUnit];
+
+                // Convert input value to base unit (cm)
+                const valueInCm = fromUnit.toCm(inputValue);
+                // Convert from base unit (cm) to output unit
+                const convertedValue = toUnit.fromCm(valueInCm);
+
+                this.elements.outputValue.value = Math.round(convertedValue * 10000) / 10000;
+            }
+            
+            handleBlur() {
+                const inputValue = this.safeEval(this.elements.inputValue.value);
+
+                if (isNaN(inputValue)) {
+                    return;
+                }
+                
+                this.elements.inputValue.value = inputValue; // Update the input with the evaluated value
+                this.convert(); // Re-convert to update the output value
+            }
+            
+            safeEval(inputValue) {
+                // Evaluate the input if it contains a mathematical expression
+                try {
+                    return eval(inputValue); // Use eval to calculate the result
+                } catch (error) {
+                    return NaN; // If there's an error in evaluation, set to NaN
+                }
+            }
+
+            swapUnits() {
+                [this.currentInputUnit, this.currentOutputUnit] = [this.currentOutputUnit, this.currentInputUnit]; // ES6 array destructuring for swap
+                [this.elements.inputValue.value, this.elements.outputValue.value] = [this.elements.outputValue.value, this.elements.inputValue.value];
+
+                this.updateUI();
+                this.convert(); // Re-convert after swapping values and units
+            }
+
+            updateUI() {
+                this.updateActiveButton(this.elements.inputUnitButtons, this.currentInputUnit);
+                this.updateActiveButton(this.elements.outputUnitButtons, this.currentOutputUnit);
+                this.elements.fromUnitText.textContent = DISTANCE_UNITS[this.currentInputUnit].name;
+                this.elements.toUnitText.textContent = DISTANCE_UNITS[this.currentOutputUnit].name;
+                this.convert(); // Ensure output is updated after unit changes
+            }
+        }
+
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => new UnitConverter());
+    </script>
+</body>
+</html>
