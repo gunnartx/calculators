@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f4">
+  <title>Washer delay calculator</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #1e2924;
+      background: #f6f7f4;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+
+    main {
+      width: min(100%, 440px);
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.65rem;
+      letter-spacing: -0.04em;
+    }
+
+    .intro {
+      margin: 0 0 24px;
+      color: #5b6861;
+      line-height: 1.45;
+    }
+
+    .card {
+      padding: 20px;
+      border: 1px solid #e1e6e0;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgb(30 41 36 / 5%);
+    }
+
+    .field { margin-bottom: 22px; }
+
+    label, legend {
+      font-size: 0.95rem;
+      font-weight: 650;
+    }
+
+    input[type="time"] {
+      display: block;
+      width: 100%;
+      min-height: 50px;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border: 1px solid #cbd4cd;
+      border-radius: 12px;
+      background: #fff;
+      color: inherit;
+      font: inherit;
+      font-size: 1.1rem;
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend { margin-bottom: 10px; }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .choice {
+      position: relative;
+      display: block;
+      cursor: pointer;
+    }
+
+    .choice input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+
+    .choice span {
+      display: grid;
+      min-height: 48px;
+      place-items: center;
+      border: 1px solid #cbd4cd;
+      border-radius: 12px;
+      background: #fff;
+      font-weight: 600;
+    }
+
+    .choice input:checked + span {
+      border-color: #176b4a;
+      background: #eaf5ee;
+      color: #12583d;
+      box-shadow: inset 0 0 0 1px #176b4a;
+    }
+
+    .choice input:focus-visible + span {
+      outline: 3px solid #7bb89c;
+      outline-offset: 2px;
+    }
+
+    .minutes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .minutes .choice span { min-height: 48px; }
+
+    .result {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 14px;
+      background: #edf6f0;
+      text-align: center;
+    }
+
+    .result-label {
+      margin: 0 0 4px;
+      color: #53635a;
+      font-size: 0.9rem;
+    }
+
+    output {
+      display: block;
+      color: #12583d;
+      font-size: clamp(2rem, 10vw, 2.8rem);
+      font-weight: 750;
+      letter-spacing: -0.05em;
+      line-height: 1.15;
+    }
+
+    #note {
+      margin: 8px 0 0;
+      color: #53635a;
+      font-size: 0.9rem;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .choice span {
+        transition: background-color 120ms ease, border-color 120ms ease;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Washer delay</h1>
+    <p class="intro">
+      Set when the wash should finish. We’ll work out the delay to enter on your washer.
+    </p>
+
+    <section class="card" aria-label="Washer delay calculator">
+      <div class="field">
+        <label for="finish">Finish by</label>
+        <input id="finish" type="time" value="07:00">
+      </div>
+
+      <div class="field">
+        <label for="now">Current time</label>
+        <input id="now" type="time">
+      </div>
+
+      <fieldset>
+        <legend>Washer run time</legend>
+
+        <div class="choices">
+          <label class="choice">
+            <input type="radio" name="hours" value="1">
+            <span>1 hr</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="hours" value="2" checked>
+            <span>2 hr</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="hours" value="3">
+            <span>3 hr</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="hours" value="4">
+            <span>4 hr</span>
+          </label>
+        </div>
+
+        <div class="minutes">
+          <label class="choice">
+            <input type="radio" name="minutes" value="0" checked>
+            <span>0 min</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="minutes" value="10">
+            <span>10 min</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="minutes" value="20">
+            <span>20 min</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="minutes" value="30">
+            <span>30 min</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="minutes" value="40">
+            <span>40 min</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="minutes" value="50">
+            <span>50 min</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="result" aria-live="polite">
+        <p class="result-label">Set your washer delay to</p>
+        <output id="delay">—</output>
+        <p id="note"></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const finishInput = document.querySelector("#finish");
+    const nowInput = document.querySelector("#now");
+    const delayOutput = document.querySelector("#delay");
+    const noteOutput = document.querySelector("#note");
+
+    function localTimeValue(date) {
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${hours}:${minutes}`;
+    }
+
+    function selectedValue(name) {
+      return Number(
+        document.querySelector(`input[name="${name}"]:checked`).value
+      );
+    }
+
+    function calculate() {
+      if (!finishInput.value || !nowInput.value) {
+        delayOutput.textContent = "—";
+        noteOutput.textContent = "Enter both times to calculate.";
+        return;
+      }
+
+      const [nowHours, nowMinutes] = nowInput.value.split(":").map(Number);
+      const [finishHours, finishMinutes] = finishInput.value.split(":").map(Number);
+
+      const now = nowHours * 60 + nowMinutes;
+      const finish = finishHours * 60 + finishMinutes;
+      const runTime = selectedValue("hours") * 60 + selectedValue("minutes");
+
+      let untilFinish = (finish - now + 1440) % 1440;
+      if (untilFinish < runTime) untilFinish += 1440;
+
+      const exactDelay = untilFinish - runTime;
+      const delayHours = Math.min(23, Math.floor(exactDelay / 60));
+      const minutesEarly = exactDelay - delayHours * 60;
+
+      delayOutput.textContent =
+        `${delayHours} hour${delayHours === 1 ? "" : "s"}`;
+
+      const actualFinish = now + runTime + delayHours * 60;
+      const finishDay = actualFinish >= 1440 ? "tomorrow" : "today";
+      const earlyNote = minutesEarly ? ` — ${minutesEarly} min early` : "";
+
+      noteOutput.textContent =
+        `Finishes ${finishInput.value} ${finishDay}${earlyNote}`;
+    }
+
+    nowInput.value = localTimeValue(new Date());
+
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("input", calculate);
+      input.addEventListener("change", calculate);
+    });
+
+    calculate();
+  </script>
+</body>
+</html>
